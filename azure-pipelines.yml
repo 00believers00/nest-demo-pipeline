@@ -9,7 +9,9 @@ resources:
 - repo: self
 
 variables:
-  tag: '$(Build.BuildId)'
+  project_name: 'demo-pipeline'
+  tag: '$(project_name)/$(Build.BuildId)'
+  imgae_name: '$(project_name)-image.tar'
 
 stages:
 - stage: Build
@@ -32,9 +34,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          docker save MY_DOCKER_REPO_IMAGE_NAME:$(tag) -o $(Pipeline.Workspace)/MY_IMAGE_FILE.tar
+          docker save MY_DOCKER_REPO_IMAGE_NAME:$(tag) -o $(Pipeline.Workspace)/$(imgae_name)
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(Pipeline.Workspace)/MY_IMAGE_FILE.tar'
-        artifact: 'MY_ARTIFACT'
+        targetPath: '$(Pipeline.Workspace)/$(imgae_name)'
+        artifact: '$(project_name)'
         publishLocation: 'pipeline'
