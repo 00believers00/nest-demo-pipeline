@@ -40,6 +40,12 @@ jobs:
         sourceFolder: '$(Pipeline.Workspace)'
         contents: '*.tar'
     - task: SSH@0
+      displayName: 'Clear Container'
+      inputs:
+        sshEndpoint: 'EC2-Demo_Pipeline'
+        commands: 'sudo docker rm -f $(project_name)'
+      continueOnError: true
+    - task: SSH@0
       displayName: 'Clear Image'
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
@@ -55,12 +61,6 @@ jobs:
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
         commands: 'sudo rm $(imgae_name).tar'
-    - task: SSH@0
-      displayName: 'Clear Container'
-      inputs:
-        sshEndpoint: 'EC2-Demo_Pipeline'
-        commands: 'sudo docker rm -f $(project_name)'
-      continueOnError: true
     - task: SSH@0
       displayName: 'Run Container'
       inputs:
