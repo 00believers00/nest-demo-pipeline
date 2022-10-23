@@ -12,6 +12,12 @@ variables:
   tag: '$(Build.BuildId)'
 
 stages:
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'EC2-Demo_Pipeline'
+    runOptions: 'commands'
+    commands: 'docker run -p 4040:4000 -d $(tag)'
+    readyTimeout: '20000'
 - stage: Build
   displayName: Build image
   jobs:
@@ -27,9 +33,4 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
-    - task: SSH@0
-      inputs:
-        sshEndpoint: 'EC2-Demo_Pipeline'
-        runOptions: 'commands'
-        commands: 'docker run -p 4040:4000 -d $(tag)'
-        readyTimeout: '20000'
+
