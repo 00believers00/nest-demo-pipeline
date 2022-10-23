@@ -10,7 +10,7 @@ resources:
 
 variables:
   project_name: 'demo-pipeline'
-  tag: '$(Build.BuildId)'
+  tag: '$(project_name):$(Build.BuildId)'
   imgae_name: '$(project_name)-image.tar'
 
 stages:
@@ -33,7 +33,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          docker save $(project_name):$(tag) -o $(Pipeline.Workspace)/$(imgae_name)
+          docker save $(tag) -o $(Pipeline.Workspace)/$(imgae_name)
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(Pipeline.Workspace)/$(imgae_name)'
