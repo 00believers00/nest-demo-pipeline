@@ -34,20 +34,7 @@ stages:
         targetType: 'inline'
         script: |
           docker save $(tag) -o $(Pipeline.Workspace)/$(imgae_name).tar
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: '$(Pipeline.Workspace)/$(imgae_name).tar'
-        artifact: '$(project_name)'
-        publishLocation: 'pipeline'
 
-- stage: Deploy
-  displayName: Deploy image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
     - task: CopyFilesOverSSH@0
       displayName: 'Copy file docker image to ec2 '
       inputs:
