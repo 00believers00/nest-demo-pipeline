@@ -48,7 +48,7 @@ stages:
         sshEndpoint: 'EC2-Demo_Pipeline'
         runOptions: inline
         inline: |
-        sudo docker load -i $(imgae_name).tar \
-        sudo docker run -p $(config_port) -d $(tag) \
-        sudo rm $(imgae_name).tar
+        sudo docker load -i "$(imgae_name).tar" \
+        sudo docker run -p "$(config_port)" -d "$(tag)" \
+        sudo rm "$(imgae_name).tar"
 
