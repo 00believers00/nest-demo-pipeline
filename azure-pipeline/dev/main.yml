@@ -1,8 +1,8 @@
 trigger:
 - main
 
-resources:
-- repo: self
+pool:
+  vmImage: ubuntu-latest
 
 variables:
   project_name: 'demo_pipeline'
@@ -11,10 +11,8 @@ variables:
   config_port: '4000:4000'
 
 jobs:
-  - job: DemoPipeline
-    displayName: 'Demo-Pipeline'
-    pool:
-      vmImage: ubuntu-latest
+  - job: DemoPipelineBackend
+    displayName: 'Demo Pipeline Backend'
     steps:
       - template: "build.yml"
       - template: "deploy.yml"
