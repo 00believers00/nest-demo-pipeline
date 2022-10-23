@@ -62,5 +62,5 @@ stages:
         runOptions: inline
         inline: |
         docker load -i $(imgae_name).tar \
-        docker run -p 4000:4000 -d $(tag) \
+        docker run -p '4000:4000' -d $(tag) \
         rm $(imgae_name).tar
