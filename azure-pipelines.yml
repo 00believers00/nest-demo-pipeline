@@ -9,9 +9,9 @@ resources:
 - repo: self
 
 variables:
-  project_name: 'demo-pipeline'
-  tag: '$(project_name):$(Build.BuildId)'
-  imgae_name: '$(project_name)-image'
+  project_name: 'demo_pipeline'
+  tag: '$(project_name):latest'
+  imgae_name: '$(project_name)_image'
   config_port: '4000:4000'
 
 jobs:
@@ -38,19 +38,29 @@ jobs:
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
         sourceFolder: '$(Pipeline.Workspace)'
-        contents: '*.tar'    
+        contents: '*.tar'
     - task: SSH@0
-      displayName: 'Load Docker Image'
+      displayName: 'Clear Image'
+      inputs:
+        sshEndpoint: 'EC2-Demo_Pipeline'
+        commands: 'sudo docker image rm $(tag)'  
+    - task: SSH@0
+      displayName: 'Load Image'
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
         commands: 'sudo docker load -i $(imgae_name).tar'
-    - task: SSH@0
-      displayName: 'Run Docker Image'
-      inputs:
-        sshEndpoint: 'EC2-Demo_Pipeline'
-        commands: 'sudo docker run -p $(config_port) -d $(tag)'
     - task: SSH@0
       displayName: 'Remove File Docker Image'
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
         commands: 'sudo rm $(imgae_name).tar'
+    - task: SSH@0
+      displayName: 'Clear Container'
+      inputs:
+        sshEndpoint: 'EC2-Demo_Pipeline'
+        commands: 'sudo docker rm -f $(project_name)'
+    - task: SSH@0
+      displayName: 'Run Container'
+      inputs:
+        sshEndpoint: 'EC2-Demo_Pipeline'
+        commands: 'sudo docker run --name $(project_name) -p $(config_port) -d $(tag)'
