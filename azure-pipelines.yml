@@ -11,7 +11,7 @@ resources:
 variables:
   project_name: 'demo-pipeline'
   tag: '$(project_name):$(Build.BuildId)'
-  imgae_name: '$(project_name)-image.tar'
+  imgae_name: '$(project_name)-image'
 
 stages:
 - stage: Build
@@ -33,10 +33,10 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          docker save $(tag) -o $(Pipeline.Workspace)/$(imgae_name)
+          docker save $(tag) -o $(Pipeline.Workspace)/$(imgae_name).tar
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(Pipeline.Workspace)/$(imgae_name)'
+        targetPath: '$(Pipeline.Workspace)/$(imgae_name).tar'
         artifact: '$(project_name)'
         publishLocation: 'pipeline'
 
@@ -52,7 +52,7 @@ stages:
       displayName: 'Copy file docker image to ec2 '
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
-        sourceFolder: '$(System.DefaultWorkingDirectory)/_00believers00.nest-demo-pipeline/demo-pipeline/demo-pipeline-image.tar'
+        sourceFolder: '$(Pipeline.Workspace)/$(imgae_name).tar'
         targetFolder: /home/ubuntu
         
     - task: SSH@0
@@ -61,6 +61,6 @@ stages:
         sshEndpoint: 'EC2-Demo_Pipeline'
         runOptions: inline
         inline: |
-        docker load -i demo-pipeline-image.tar
-        docker run -p 4000:4000 -d demo-pipeline:26
-        rm demo-pipeline-image.tar
+        docker load -i $(imgae_name).tar \
+        docker run -p 4000:4000 -d $(tag) \
+        rm $(imgae_name).tar
