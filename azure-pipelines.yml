@@ -15,8 +15,8 @@ variables:
   config_port: '4000:4000'
 
 jobs:
-  - job: Demo-Pipeline
-    displayName: Demo-Pipeline
+  - job: DemoPipeline
+    displayName: 'Demo-Pipeline'
     pool:
       vmImage: ubuntu-latest
     steps:
