@@ -10,7 +10,7 @@ resources:
 
 variables:
   project_name: 'demo-pipeline'
-  tag: '$(project_name)/$(Build.BuildId)'
+  tag: '$(project_name)-$(Build.BuildId)'
   imgae_name: '$(project_name)-image.tar'
 
 stages:
