@@ -39,3 +39,28 @@ stages:
         targetPath: '$(Pipeline.Workspace)/$(imgae_name)'
         artifact: '$(project_name)'
         publishLocation: 'pipeline'
+
+- stage: Deploy
+  displayName: Deploy image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: CopyFilesOverSSH@0
+      displayName: 'Copy file docker image to ec2 '
+      inputs:
+        sshEndpoint: 'EC2-Demo_Pipeline'
+        sourceFolder: '$(System.DefaultWorkingDirectory)/_00believers00.nest-demo-pipeline/demo-pipeline/demo-pipeline-image.tar'
+        targetFolder: /home/ubuntu
+        
+    - task: SSH@0
+      displayName: 'Load docker file'
+      inputs:
+        sshEndpoint: 'EC2-Demo_Pipeline'
+        runOptions: inline
+        inline: |
+        docker load -i demo-pipeline-image.tar
+        docker run -p 4000:4000 -d demo-pipeline:26
+        rm demo-pipeline-image.tar
