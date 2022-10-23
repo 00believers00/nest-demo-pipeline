@@ -22,13 +22,12 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-    - task: Docker@2
-      displayName: Build an image
+    - task: Bash@3
+      displayName: Build Docker Image
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+        targetType: 'inline'
+        script: |
+          docker build $(Build.SourcesDirectory) -t $(tag)
     - task: Bash@3
       displayName: Save Docker Image
       inputs:
