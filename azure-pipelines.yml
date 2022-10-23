@@ -25,7 +25,7 @@ jobs:
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
         commands: 'sudo docker image rm $(tag)'
-      continueOnError: true
+      failOnStdErr: false
     - task: Bash@3
       displayName: Build Docker Image
       inputs:
