@@ -43,6 +43,7 @@ jobs:
       displayName: 'Clear Image'
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
+        failOnStdErr: false
         commands: 'sudo docker image rm $(tag)'  
     - task: SSH@0
       displayName: 'Load Image'
@@ -58,6 +59,7 @@ jobs:
       displayName: 'Clear Container'
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
+        failOnStdErr: false
         commands: 'sudo docker rm -f $(project_name)'
     - task: SSH@0
       displayName: 'Run Container'
