@@ -41,14 +41,19 @@ stages:
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
         sourceFolder: '$(Pipeline.Workspace)'
-        contents: '*.tar'
+        contents: '*.tar'    
     - task: SSH@0
-      displayName: 'Run shell inline on remote machine'
+      displayName: 'Load image'
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
-        runOptions: inline
-        inline: |
-        sudo docker load -i "$(imgae_name).tar" \
-        sudo docker run -p "$(config_port)" -d "$(tag)" \
-        sudo rm "$(imgae_name).tar"
-
+        commands: 'sudo docker load -i $(imgae_name).tar'
+    - task: SSH@0
+      displayName: 'Run image'
+      inputs:
+        sshEndpoint: 'EC2-Demo_Pipeline'
+        commands: 'sudo docker run -p $(config_port) -d $(tag)'
+    - task: SSH@0
+      displayName: 'Remove image'
+      inputs:
+        sshEndpoint: 'EC2-Demo_Pipeline'
+        commands: 'sudo rm $(imgae_name).tar'
