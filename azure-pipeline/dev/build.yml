@@ -1,0 +1,13 @@
+steps:
+  - task: Bash@3
+    displayName: Build Docker Image
+    inputs:
+      targetType: 'inline'
+      script: |
+        docker build $(Build.SourcesDirectory) -t $(tag)
+  - task: Bash@3
+    displayName: Save Loacl Docker Image
+    inputs:
+      targetType: 'inline'
+      script: |
+        docker save $(tag) -o $(Pipeline.Workspace)/$(imgae_name).tar

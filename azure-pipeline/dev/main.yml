@@ -1,0 +1,20 @@
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  project_name: 'demo_pipeline'
+  tag: '$(project_name):latest'
+  imgae_name: '$(project_name)_image'
+  config_port: '4000:4000'
+
+jobs:
+  - job: DemoPipeline
+    displayName: 'Demo-Pipeline'
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - template: "build.yml"
+      - template: "deploy.yml"

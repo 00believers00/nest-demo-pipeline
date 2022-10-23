@@ -1,0 +1,34 @@
+steps:
+  - task: CopyFilesOverSSH@0
+    displayName: 'Copy Loacl To EC2 '
+    inputs:
+      sshEndpoint: 'EC2-Demo_Pipeline'
+      sourceFolder: '$(Pipeline.Workspace)'
+      contents: '*.tar'
+  - task: SSH@0
+    displayName: 'Clear Container'
+    inputs:
+      sshEndpoint: 'EC2-Demo_Pipeline'
+      commands: 'sudo docker rm -f $(project_name)'
+    continueOnError: true
+  - task: SSH@0
+    displayName: 'Clear Image'
+    inputs:
+      sshEndpoint: 'EC2-Demo_Pipeline'
+      commands: 'sudo docker image rm $(tag)'  
+    continueOnError: true
+  - task: SSH@0
+    displayName: 'Load Image'
+    inputs:
+      sshEndpoint: 'EC2-Demo_Pipeline'
+      commands: 'sudo docker load -i $(imgae_name).tar'
+  - task: SSH@0
+    displayName: 'Remove File Docker Image'
+    inputs:
+      sshEndpoint: 'EC2-Demo_Pipeline'
+      commands: 'sudo rm $(imgae_name).tar'
+  - task: SSH@0
+    displayName: 'Run Container'
+    inputs:
+      sshEndpoint: 'EC2-Demo_Pipeline'
+      commands: 'sudo docker run --name $(project_name) -p $(config_port) -d $(tag)'
