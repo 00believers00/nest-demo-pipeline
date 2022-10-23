@@ -20,6 +20,12 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     steps:
+    - task: SSH@0
+      displayName: 'Clear Image'
+      inputs:
+        sshEndpoint: 'EC2-Demo_Pipeline'
+        commands: 'sudo docker image rm $(tag)'  
+        failOnStdErr: true
     - task: Bash@3
       displayName: Build Docker Image
       inputs:
@@ -44,7 +50,7 @@ jobs:
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
         commands: 'sudo docker image rm $(tag)'  
-        failOnStdErr: false
+        failOnStdErr: true
     - task: SSH@0
       displayName: 'Load Image'
       inputs:
@@ -60,7 +66,7 @@ jobs:
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
         commands: 'sudo docker rm -f $(project_name)'
-        failOnStdErr: false
+        failOnStdErr: true
     - task: SSH@0
       displayName: 'Run Container'
       inputs:
