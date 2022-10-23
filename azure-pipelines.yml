@@ -27,9 +27,14 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
-    - task: SSH@0
+    - task: Bash@3
+      displayName: Save Docker Image
       inputs:
-        sshEndpoint: 'EC2-Demo_Pipeline'
-        runOptions: 'commands'
-        commands: 'docker run -p 4040:4000 -d $(tag)'
-        readyTimeout: '20000'
+        targetType: 'inline'
+        script: |
+          docker save MY_DOCKER_REPO_IMAGE_NAME:$(tag) -o $(Pipeline.Workspace)/MY_IMAGE_FILE.tar
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Pipeline.Workspace)/MY_IMAGE_FILE.tar'
+        artifact: 'MY_ARTIFACT'
+        publishLocation: 'pipeline'
