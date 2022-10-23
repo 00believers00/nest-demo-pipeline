@@ -55,12 +55,4 @@ stages:
         sourceFolder: '$(Pipeline.Workspace)/$(imgae_name).tar'
         targetFolder: /home/ubuntu
         
-    - task: SSH@0
-      displayName: 'Load docker file'
-      inputs:
-        sshEndpoint: 'EC2-Demo_Pipeline'
-        runOptions: inline
-        inline: |
-        docker load -i "$(imgae_name).tar" \
-        docker run -p "4000:4000" -d "$(tag)" \
-        rm "$(imgae_name).tar"
+
