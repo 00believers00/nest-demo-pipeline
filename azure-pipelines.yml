@@ -40,6 +40,6 @@ stages:
       inputs:
         sshEndpoint: 'EC2-Demo_Pipeline'
         sourceFolder: '$(Pipeline.Workspace)/$(imgae_name).tar'
-        targetFolder: ./
+        targetFolder: '/home/ubuntu'
         
 
